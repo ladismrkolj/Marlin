@@ -184,3 +184,10 @@ cmake-build-*
 
 #Python
 __pycache__
+
+#Machine specific settings
+Marlin/Configuration.h
+Marlin/Configuration_adv.h
+Marlin/_Bootscreen.h
+Marlin/_Statusscreen.h
+platformio.ini
