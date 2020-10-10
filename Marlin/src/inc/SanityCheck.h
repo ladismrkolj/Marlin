@@ -1126,11 +1126,6 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
   #error "The selected board doesn't support enough user-controlled fans. Reduce NUM_M106_FANS."
 #endif
 
-//Chamber fan modes
-#if CHAMBER_FAN_MODE > 2
-  #error "The selected chamber fan mode doesen't exist. Please chach configuration_adv.h"
-#endif
-
 /**
  * Limited number of servos
  */

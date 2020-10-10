@@ -1272,15 +1272,17 @@ void Temperature::manage_heater() {
             if (temp_chamber.celsius >= temp_chamber.target + TEMP_CHAMBER_HYSTERESIS)
               temp_chamber.soft_pwm_amount = 0;
             else if (temp_chamber.celsius <= temp_chamber.target - (TEMP_CHAMBER_HYSTERESIS))
-              temp_chamber.soft_pwm_amount = MAX_CHAMBER_POWER >> 1;
+              temp_chamber.soft_pwm_amount = (MAX_CHAMBER_POWER) >> 1;
           #else
-            temp_chamber.soft_pwm_amount = temp_chamber.celsius < temp_chamber.target ? MAX_CHAMBER_POWER >> 1 : 0;
+            temp_chamber.soft_pwm_amount = temp_chamber.celsius < temp_chamber.target ? (MAX_CHAMBER_POWER) >> 1 : 0;
+          #endif
           #if ENABLED(CHAMBER_VENT)
             if (!flag_chamber_off) MOVE_SERVO(CHAMBER_VENT_SERVO_NR, 0);
           #endif
         }
       }
       else {
+        temp_chamber.soft_pwm_amount = 0;
         WRITE_HEATER_CHAMBER(LOW);
       }
 

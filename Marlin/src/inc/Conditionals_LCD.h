@@ -649,22 +649,9 @@
  * The BLTouch Probe emulates a servo probe
  * and uses "special" angles for its state.
  */
-
-#if ENABLED(CHAMBER_VENT) || ENABLED(BLTOUCH)
-  #ifndef NUM_SERVOS
-    #if ENABLED(CHAMBER_VENT)
-      #define NUM_SERVOS 2
-    #elif ENABLED(BLTOUCH)
-      #define NUM_SERVOS 1
-    #endif
-  #endif
-  #if NUM_SERVOS == 1
-    #undef SERVO_DELAY
-    #define SERVO_DELAY { 50 }
-  #endif
-  #if NUM_SERVOS == 2
-    #undef SERVO_DELAY
-    #define SERVO_DELAY { 50, 300 }
+#if ENABLED(BLTOUCH)
+  #ifndef Z_PROBE_SERVO_NR
+    #define Z_PROBE_SERVO_NR 0
   #endif
   #undef DEACTIVATE_SERVOS_AFTER_MOVE
 
