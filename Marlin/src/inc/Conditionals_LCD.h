@@ -603,10 +603,6 @@
   #define DO_SWITCH_EXTRUDER 1
 #endif
 
-#ifdef SWITCHING_NOZZLE_E1_SERVO_NR
-  #define SWITCHING_NOZZLE_TWO_SERVOS 1
-#endif
-
 /**
  * Default hotend offsets, if not defined
  */
@@ -670,22 +666,6 @@
     #undef SERVO_DELAY
     #define SERVO_DELAY { 50, 300 }
   #endif
-#endif
-
-#if ENABLED(BLTOUCH) && !ENABLED(CHAMBER_VENT)
-  #ifndef NUM_SERVOS
-    #define NUM_SERVOS (Z_PROBE_SERVO_NR + 1)
-  #endif
-  #if NUM_SERVOS == 1
-    #undef SERVO_DELAY
-    #define SERVO_DELAY { 50 }
-  #endif
-#endif
-
-#if ENABLED(BLTOUCH)
-  #ifndef Z_PROBE_SERVO_NR
-    #define Z_PROBE_SERVO_NR 0
-  #endif
   #undef DEACTIVATE_SERVOS_AFTER_MOVE
 
   // Always disable probe pin inverting for BLTouch
@@ -697,14 +677,10 @@
   #endif
 #endif
 
-#ifndef NUM_SERVOS
-  #define NUM_SERVOS 0
-#endif
-
 /**
  * Set a flag for a servo probe (or BLTouch)
  */
-#if defined(Z_PROBE_SERVO_NR) && Z_PROBE_SERVO_NR >= 0
+#ifdef Z_PROBE_SERVO_NR
   #define HAS_Z_SERVO_PROBE 1
 #endif
 #if ANY(HAS_Z_SERVO_PROBE, SWITCHING_EXTRUDER, SWITCHING_NOZZLE)

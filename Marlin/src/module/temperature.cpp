@@ -114,11 +114,6 @@
 #if HAS_SERVOS
   #include "./servo.h"
 #endif
-
-#ifdef DEBUG_SERIAL
-  #include "../core/serial.h"
-#endif
-
 #if HOTEND_USES_THERMISTOR
   #if ENABLED(TEMP_SENSOR_1_AS_REDUNDANT)
     static const temp_entry_t* heater_ttbl_map[2] = { HEATER_0_TEMPTABLE, HEATER_1_TEMPTABLE };
@@ -642,6 +637,11 @@ volatile bool Temperature::raw_temps_ready = false;
 
         goto EXIT_M303;
       }
+
+      // Run HAL idle tasks
+      TERN_(HAL_IDLETASK, HAL_idletask());
+
+      // Run UI update
       TERN(DWIN_CREALITY_LCD, DWIN_Update(), ui.update());
     }
     wait_for_heatup = false;
@@ -1202,21 +1202,21 @@ void Temperature::manage_heater() {
       }
     #endif
 
-    #if ENABLED(CHAMBER_FAN) || ENABLED(CHAMBER_VENT)
+    #if EITHER(CHAMBER_FAN, CHAMBER_VENT)
       if (temp_chamber.target > CHAMBER_MINTEMP) {
         flag_chamber_off = false;
 
         #if ENABLED(CHAMBER_FAN)
           #if CHAMBER_FAN_MODE == 0
             fan_chamber_pwm = CHAMBER_FAN_BASE
-          #elif CHAMBER_FAN_MODE == 1 //TODO
+          #elif CHAMBER_FAN_MODE == 1
+            fan_chamber_pwm = (temp_chamber.celsius > temp_chamber.target) ? (CHAMBER_FAN_BASE) + (CHAMBER_FAN_FACTOR) * (temp_chamber.celsius - temp_chamber.target) : 0;
           #elif CHAMBER_FAN_MODE == 2
-            fan_chamber_pwm = CHAMBER_FAN_BASE + ( abs(temp_chamber.celsius - temp_chamber.target)  * CHAMBER_FAN_FACTOR );
-            if(temp_chamber.soft_pwm_amount != 0){
-              fan_chamber_pwm += (2 * CHAMBER_FAN_FACTOR);
-            }
-            fan_chamber_pwm = std::min<int>(fan_chamber_pwm, 255);
+            fan_chamber_pwm = (CHAMBER_FAN_BASE) + (CHAMBER_FAN_FACTOR) * ABS(temp_chamber.celsius - temp_chamber.target);
+            if (temp_chamber.soft_pwm_amount)
+              fan_chamber_pwm += (CHAMBER_FAN_FACTOR) * 2;
           #endif
+          NOMORE(fan_chamber_pwm, 225);
           thermalManager.set_fan_speed(2, fan_chamber_pwm); // TODO: instead of fan 2, set to chamber fan
         #endif
 
@@ -1244,7 +1244,7 @@ void Temperature::manage_heater() {
             flag_chamber_excess_heat = false;
           }
         #endif
-      } 
+      }
       else if (!flag_chamber_off) {
         #if ENABLED(CHAMBER_FAN)
           flag_chamber_off = true;
@@ -1261,7 +1261,13 @@ void Temperature::manage_heater() {
       next_chamber_check_ms = ms + CHAMBER_CHECK_INTERVAL;
 
       if (WITHIN(temp_chamber.celsius, CHAMBER_MINTEMP, CHAMBER_MAXTEMP)) {
-        if (!flag_chamber_excess_heat){
+        if (flag_chamber_excess_heat) {
+          temp_chamber.soft_pwm_amount = 0;
+          #if ENABLED(CHAMBER_VENT)
+            if (!flag_chamber_off) MOVE_SERVO(CHAMBER_VENT_SERVO_NR, temp_chamber.celsius <= temp_chamber.target ? 0 : 90);
+          #endif
+        }
+        else {
           #if ENABLED(CHAMBER_LIMIT_SWITCHING)
             if (temp_chamber.celsius >= temp_chamber.target + TEMP_CHAMBER_HYSTERESIS)
               temp_chamber.soft_pwm_amount = 0;
@@ -1269,16 +1275,12 @@ void Temperature::manage_heater() {
               temp_chamber.soft_pwm_amount = MAX_CHAMBER_POWER >> 1;
           #else
             temp_chamber.soft_pwm_amount = temp_chamber.celsius < temp_chamber.target ? MAX_CHAMBER_POWER >> 1 : 0;
+          #if ENABLED(CHAMBER_VENT)
+            if (!flag_chamber_off) MOVE_SERVO(CHAMBER_VENT_SERVO_NR, 0);
           #endif
-          if (!flag_chamber_off) MOVE_SERVO(CHAMBER_VENT_SERVO_NR, 0);
-        }
-        else {
-          temp_chamber.soft_pwm_amount = 0;
-          if (!flag_chamber_off) MOVE_SERVO(CHAMBER_VENT_SERVO_NR, (temp_chamber.celsius <= temp_chamber.target ? 0 : 90 ) );
         }
       }
       else {
-        temp_chamber.soft_pwm_amount = 0;
         WRITE_HEATER_CHAMBER(LOW);
       }
 
