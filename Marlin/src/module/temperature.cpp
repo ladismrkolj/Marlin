@@ -1216,7 +1216,7 @@ void Temperature::manage_heater() {
             if (temp_chamber.soft_pwm_amount)
               fan_chamber_pwm += (CHAMBER_FAN_FACTOR) * 2;
           #endif
-          NOMORE(fan_chamber_pwm, 225);
+          NOMORE(fan_chamber_pwm, 255);
           thermalManager.set_fan_speed(2, fan_chamber_pwm); // TODO: instead of fan 2, set to chamber fan
         #endif
 
