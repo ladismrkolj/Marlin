@@ -143,7 +143,7 @@
   #define CHAMBER_MINTEMP             5
   #define CHAMBER_MAXTEMP            100
   #define TEMP_CHAMBER_HYSTERESIS     1   // (°C) Temperature proximity considered "close enough" to the target
-  //#define CHAMBER_LIMIT_SWITCHING
+  #define CHAMBER_LIMIT_SWITCHING
   //#define HEATER_CHAMBER_PIN       44   // Chamber heater on/off pin
   //#define HEATER_CHAMBER_INVERTING false
 
@@ -157,7 +157,7 @@
       #define CHAMBER_FAN_FACTOR 25   // PWM increase per °C above target
     #elif CHAMBER_FAN_MODE == 2
       #define CHAMBER_FAN_BASE  128   // Minimum chamber fan PWM (0-255)
-      #define CHAMBER_FAN_FACTOR 25   // PWM increase per °C difference from target
+      #define CHAMBER_FAN_FACTOR 32   // PWM increase per °C difference from target
     #endif
   #endif
 
@@ -236,7 +236,7 @@
   /**
    * Heated chamber watch settings (M141/M191).
    */
-  #define WATCH_CHAMBER_TEMP_PERIOD            60 // Seconds
+  #define WATCH_CHAMBER_TEMP_PERIOD            300 // Seconds
   #define WATCH_CHAMBER_TEMP_INCREASE           1 // Degrees Celsius
 #endif
 
