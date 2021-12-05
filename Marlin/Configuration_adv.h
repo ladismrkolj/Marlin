@@ -198,7 +198,7 @@
       #define CHAMBER_FAN_BASE  128   // Minimum chamber fan PWM (0-255)
       #define CHAMBER_FAN_FACTOR 25   // PWM increase per °C difference from target
     #elif CHAMBER_FAN_MODE == 3
-      #define CHAMBER_FAN_BASE  128   // Base chamber fan PWM (0-255)
+      #define CHAMBER_FAN_BASE  160   // Base chamber fan PWM (0-255)
       #define CHAMBER_FAN_FACTOR 25   // PWM increase per °C above target
     #endif
   #endif
@@ -295,7 +295,7 @@
    * and/or decrease WATCH_TEMP_INCREASE. WATCH_TEMP_INCREASE should not be set
    * below 2.
    */
-  #define WATCH_TEMP_PERIOD  20               // Seconds
+  #define WATCH_TEMP_PERIOD  40               // Seconds
   #define WATCH_TEMP_INCREASE 2               // Degrees Celsius
 #endif
 
@@ -538,7 +538,7 @@
  * Define one or both of these to override the default 0-255 range.
  */
 #define FAN_MIN_PWM 80
-#define FAN_MAX_PWM 255
+//#define FAN_MAX_PWM 255
 
 /**
  * FAST PWM FAN Settings
@@ -860,7 +860,7 @@
 
   // Feature: Switch into SW mode after a deploy. It makes the output pulse longer. Can be useful
   //          in special cases, like noisy or filtered input configurations.
-  #define BLTOUCH_FORCE_SW_MODE
+  //#define BLTOUCH_FORCE_SW_MODE
 
   /**
    * Settings for BLTouch Smart 3.0 and 3.1
@@ -878,7 +878,7 @@
    * differs, a mode set eeprom write will be completed at initialization.
    * Use the option below to force an eeprom write to a V3.1 probe regardless.
    */
-  #define BLTOUCH_SET_5V_MODE
+  //#define BLTOUCH_SET_5V_MODE
 
   /**
    * Safety: Activate if connecting a probe with an unknown voltage mode.
@@ -2639,7 +2639,7 @@
   #define INTERPOLATE      true
 
   #if AXIS_IS_TMC(X)
-    #define X_CURRENT       800        // (mA) RMS current. Multiply by 1.414 for peak current.
+    #define X_CURRENT       500        // (mA) RMS current. Multiply by 1.414 for peak current.
     #define X_CURRENT_HOME  X_CURRENT  // (mA) RMS current for sensorless homing
     #define X_MICROSTEPS     16        // 0..256
     #define X_RSENSE          0.11
@@ -2738,7 +2738,7 @@
   #endif
 
   #if AXIS_IS_TMC(E0)
-    #define E0_CURRENT      800
+    #define E0_CURRENT      450
     #define E0_MICROSTEPS    16
     #define E0_RSENSE         0.11
     #define E0_CHAIN_POS     -1
@@ -2746,7 +2746,7 @@
   #endif
 
   #if AXIS_IS_TMC(E1)
-    #define E1_CURRENT      800
+    #define E1_CURRENT      450
     #define E1_MICROSTEPS   E0_MICROSTEPS
     #define E1_RSENSE         0.11
     #define E1_CHAIN_POS     -1
