@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "Marlin-Ender5dual",
+			"path": "."
+		}
+	],
+	"settings": {}
+}
