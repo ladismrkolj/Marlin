@@ -691,7 +691,7 @@
   // Measured physical constants from M306
   #define MPC_BLOCK_HEAT_CAPACITY { 18.49f, 18.49f }           // (J/K) Heat block heat capacities.
   #define MPC_SENSOR_RESPONSIVENESS { 0.0793f, 0.0793f }         // (K/s per ∆K) Rate of change of sensor temperature from heat block.
-  #define MPC_AMBIENT_XFER_COEFF { 0.0954f, 0.0954f }           // (W/K) Heat transfer coefficients from heat block to room air with fan off.
+  #define MPC_AMBIENT_XFER_COEFF { 0.1f, 0.1f }           // (W/K) Heat transfer coefficients from heat block to room air with fan off.
   #if ENABLED(MPC_INCLUDE_FAN)
     #define MPC_AMBIENT_XFER_COEFF_FAN255 { 0.1216f, 0.1216f }  // (W/K) Heat transfer coefficients from heat block to room air with fan on full.
   #endif
@@ -3208,7 +3208,7 @@
 // Use software PWM to drive the fan, as for the heaters. This uses a very low frequency
 // which is not as annoying as with the hardware PWM. On the other hand, if this frequency
 // is too low, you should also increment SOFT_PWM_SCALE.
-//#define FAN_SOFT_PWM
+#define FAN_SOFT_PWM
 
 // Incrementing this by 1 will double the software PWM frequency,
 // affecting heaters, and the fan if FAN_SOFT_PWM is enabled.
@@ -3221,7 +3221,7 @@
 // be used to mitigate the associated resolution loss. If enabled,
 // some of the PWM cycles are stretched so on average the desired
 // duty cycle is attained.
-//#define SOFT_PWM_DITHER
+#define SOFT_PWM_DITHER
 
 // @section extras
 
